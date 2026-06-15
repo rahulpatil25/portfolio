@@ -19,11 +19,16 @@ import {
   Send,
   Menu,
   X,
-  Sparkles
+  Sparkles,
+  ArrowLeft,
+  Play
 } from "lucide-react"
 
 import CanvasBackground from "./components/CanvasBackground"
 import AgentSimulator from "./components/AgentSimulator"
+import RemedyTriageDemo from "./components/demos/RemedyTriageDemo"
+import SqlQueryPlannerDemo from "./components/demos/SqlQueryPlannerDemo"
+import MesDashboardDemo from "./components/demos/MesDashboardDemo"
 
 import {
   Card,
@@ -146,6 +151,7 @@ const App = () => {
   // Modal State
   const [activeProjId, setActiveProjId] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
+  const [demoActive, setDemoActive] = useState(false)
   
   // Contact Form State
   const [formName, setFormName] = useState("")
@@ -188,6 +194,7 @@ const App = () => {
   const handleOpenModal = (projId) => {
     setActiveProjId(projId)
     setModalOpen(true)
+    setDemoActive(false)
   }
 
   const handleContactSubmit = (e) => {
@@ -766,9 +773,22 @@ const App = () => {
       </footer>
 
       {/* DETAIL MODAL DIALOG */}
-      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+      <Dialog open={modalOpen} onOpenChange={(open) => {
+        setModalOpen(open)
+        if (!open) setDemoActive(false)
+      }}>
         {activeProject && (
           <DialogContent className="glass-panel text-[#f3f4f6] border-white/10 max-w-[640px] max-h-[90vh] overflow-y-auto p-8">
+            {demoActive && (
+              <Button
+                variant="ghost"
+                onClick={() => setDemoActive(false)}
+                className="h-8 px-3 text-xs text-cyanCustom border border-cyanCustom/10 bg-white/2 hover:bg-white/5 hover:text-cyanCustom w-fit flex items-center gap-1 mb-4"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" /> Back to Project Details
+              </Button>
+            )}
+
             <DialogHeader className="space-y-1">
               <div className="mb-2">
                 <Badge variant="hybrid">{activeProject.type}</Badge>
@@ -776,35 +796,53 @@ const App = () => {
               <DialogTitle className="text-2xl font-extrabold font-heading text-white">{activeProject.title}</DialogTitle>
             </DialogHeader>
 
-            <div className="grid grid-cols-3 gap-4 border-t border-b border-white/5 py-4 my-2 text-xs">
-              <div>
-                <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Partner / Context</span>
-                <p className="font-semibold text-gray-300 mt-1">{activeProject.client}</p>
-              </div>
-              <div>
-                <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Timeline</span>
-                <p className="font-semibold text-gray-300 mt-1">{activeProject.timeline}</p>
-              </div>
-              <div>
-                <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Core Tech</span>
-                <div className="flex flex-wrap gap-1.5 mt-1">
-                  {activeProject.tags.map((t, idx) => (
-                    <Badge key={idx} variant="cyan" className="text-[9px] px-2 py-0">{t}</Badge>
-                  ))}
+            {!demoActive ? (
+              <>
+                <div className="grid grid-cols-3 gap-4 border-t border-b border-white/5 py-4 my-2 text-xs">
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Partner / Context</span>
+                    <p className="font-semibold text-gray-300 mt-1">{activeProject.client}</p>
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Timeline</span>
+                    <p className="font-semibold text-gray-300 mt-1">{activeProject.timeline}</p>
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-gray-500 tracking-wider">Core Tech</span>
+                    <div className="flex flex-wrap gap-1.5 mt-1">
+                      {activeProject.tags.map((t, idx) => (
+                        <Badge key={idx} variant="cyan" className="text-[9px] px-2 py-0">{t}</Badge>
+                      ))}
+                    </div>
+                  </div>
                 </div>
+
+                <div className="text-sm text-[#9ca3af] leading-relaxed mb-4">
+                  <p>{activeProject.description}</p>
+                </div>
+
+                <h4 className="font-heading font-extrabold text-sm border-b border-white/5 pb-2 text-white">Key Contributions &amp; Results</h4>
+                <ul className="list-disc pl-5 flex flex-col gap-2.5 text-xs text-[#9ca3af] leading-relaxed">
+                  {activeProject.bullets.map((bullet, idx) => (
+                    <li key={idx} dangerouslySetInnerHTML={{ __html: bullet }} />
+                  ))}
+                </ul>
+
+                <Button
+                  variant="hybrid"
+                  onClick={() => setDemoActive(true)}
+                  className="w-full flex items-center justify-center gap-1.5 mt-6 font-semibold text-xs py-5"
+                >
+                  <Play className="w-3.5 h-3.5 fill-current" /> Launch Interactive Live Demo
+                </Button>
+              </>
+            ) : (
+              <div className="mt-4 border-t border-white/5 pt-4">
+                {activeProjId === "autopm" && <RemedyTriageDemo />}
+                {activeProjId === "guardrail" && <SqlQueryPlannerDemo />}
+                {activeProjId === "feedback" && <MesDashboardDemo />}
               </div>
-            </div>
-
-            <div className="text-sm text-[#9ca3af] leading-relaxed mb-4">
-              <p>{activeProject.description}</p>
-            </div>
-
-            <h4 className="font-heading font-extrabold text-sm border-b border-white/5 pb-2 text-white">Key Contributions &amp; Results</h4>
-            <ul className="list-disc pl-5 flex flex-col gap-2.5 text-xs text-[#9ca3af] leading-relaxed">
-              {activeProject.bullets.map((bullet, idx) => (
-                <li key={idx} dangerouslySetInnerHTML={{ __html: bullet }} />
-              ))}
-            </ul>
+            )}
           </DialogContent>
         )}
       </Dialog>
