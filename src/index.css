@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* -------------------------------------------------------------
+   CORE STYLE OVERRIDES & SELECTIONS
+   ------------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+  body {
+    @apply bg-[#060913] text-[#f3f4f6] font-body;
+  }
+}
+
+::selection {
+  background: rgba(6, 182, 212, 0.3);
+  color: #f3f4f6;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #060913;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(17, 24, 39, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.3);
+}
+
+/* -------------------------------------------------------------
+   BACKGROUND PATTERNS
+   ------------------------------------------------------------- */
+.bg-grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  background-size: 50px 50px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  mask-image: radial-gradient(ellipse at 50% 50%, black, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 50%, black, transparent 80%);
+}
+
+/* -------------------------------------------------------------
+   TIMELINE STYLING
+   ------------------------------------------------------------- */
+.timeline-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 30px;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, #06b6d4, #8b5cf6, transparent);
+}
+
+@media (max-width: 768px) {
+  .timeline-line::before {
+    left: 20px;
+  }
+}
+
+/* -------------------------------------------------------------
+   GLASS PANEL COMMON BASE
+   ------------------------------------------------------------- */
+.glass-panel {
+  background: rgba(17, 24, 39, 0.65);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* -------------------------------------------------------------
+   CONSOLE ENTRY FADE IN
+   ------------------------------------------------------------- */
+@keyframes console-fade-in {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.console-entry-anim {
+  animation: console-fade-in 0.25s forwards;
+}
