@@ -59,8 +59,9 @@ export default {
         sm: "8px",
       },
       fontFamily: {
-        heading: ["Outfit", "sans-serif"],
-        body: ["Plus Jakarta Sans", "sans-serif"],
+        sans: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+        heading: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+        body: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
         mono: ["Fira Code", "monospace"],
       },
       keyframes: {
